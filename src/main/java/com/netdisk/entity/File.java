@@ -34,5 +34,5 @@ public class File implements Serializable {
 
     private Integer type;
 
-    private Integer postfix;
+    private String postfix;
 }

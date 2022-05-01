@@ -183,6 +183,7 @@
                                     <div class="col-12">
                                         <div class="float-right">
                                             <a href="javaScript:addFolderElement()" class="btn btn-sm btn-outline-success"><i class="icon ion-plus"></i> 创建文件夹</a>
+                                            <a href="javaScript:addFolderElement()" class="btn btn-sm btn-outline-success"><i class="icon ion-plus"></i> 上传文件</a>
                                         </div>
                                     </div>
                                 </div>
@@ -192,6 +193,8 @@
                 </div>
                 <span id="nowF" style="display: none" th:text="${nowFolder.folderId}"></span>
                 <span id="preF" style="display: none" th:text="${nowFolder.parentFolderId}"></span>
+                <span id="tarFolder" style="display: none"></span>
+                <span id="tarFile" style="display: none"></span>
 
 
     <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -950,7 +953,7 @@
                 }
             },
             {
-                text: " 清空并删除",
+                text: " 删除文件夹",
                 callback: function() {
                     let id = $('#tarFolder').html();
                     var location = window.location.href;
