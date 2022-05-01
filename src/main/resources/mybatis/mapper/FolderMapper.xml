@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.netdisk.mapper.FolderMapper">
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    <resultMap id="BaseResultMap" type="com.netdisk.entity.Folder">
+        <id column="folder_id" jdbcType="INTEGER" property="folderId" />
+        <result column="folder_name" jdbcType="VARCHAR" property="folderName" />
+        <result column="parent_folder_id" jdbcType="INTEGER" property="parentFolderId" />
+        <result column="file_store_id" jdbcType="INTEGER" property="fileStoreId" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        folder_id, folder_name, parent_folder_id, file_store_id,time
+    </sql>
+    <sql id="Base_Column_List1">
+        file_id, file_name, file_store_id, file_path, download_time, upload_time,
+        parent_folder_id
+    </sql>
+
+    <!--添加属性-->
+    <sql id="Base_Insert_Key_List">
+        <if test="folderName != null">
+            folder_name,
+        </if>
+        <if test="parentFolderId != null">
+            parent_folder_id,
+        </if>
+        <if test="fileStoreId != null">
+            file_store_id,
+        </if>
+        <if test="time != null">
+            time,
+        </if>
+    </sql>
+
+    <!--添加值sql-->
+    <sql id="Base_Insert_Value_List">
+        <if test="folderName != null">
+            #{folderName,jdbcType=VARCHAR},
+        </if>
+        <if test="parentFolderId != null">
+            #{parentFolderId,jdbcType=INTEGER},
+        </if>
+        <if test="fileStoreId != null">
+            #{fileStoreId,jdbcType=INTEGER},
+        </if>
+        <if test="time != null">
+            #{time},
+        </if>
+    </sql>
+
+      <!--修改sql-->
+  <sql id="Base_Update_List">
+    <if test="folderName != null">
+      folder_name = #{folderName,jdbcType=VARCHAR},
+    </if>
+    <if test="parentFolderId != null">
+      parent_folder_id = #{parentFolderId,jdbcType=INTEGER},
+    </if>
+    <if test="fileStoreId != null">
+      file_store_id = #{fileStoreId,jdbcType=INTEGER},
+    </if>
+  </sql>
+
+  <select id="getFolderById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from folder
+    where folder_id = #{folderId,jdbcType=INTEGER}
+  </select>
+  <select id="getFolderByParentFolderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+    select
+    <include refid="Base_Column_List" />
+    from folder
+    where parent_folder_id = #{parentFolderId,jdbcType=INTEGER}
+  </select>
+  <select id="getFolderByFileStoreId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+    select
+    <include refid="Base_Column_List" />
+    from folder
+    where file_store_id = #{fileStoreId,jdbcType=INTEGER}
+  </select>
+  <select id="getRootFoldersByFileStoreId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+    select
+    <include refid="Base_Column_List" />
+    from folder
+    where file_store_id = #{fileStoreId,jdbcType=INTEGER} and parent_folder_id = 0;
+  </select>
+  <select id="getFileByFolder" parameterType="java.lang.Integer" resultType="com.netdisk.entity.File">
+
+    select
+    <include refid="Base_Column_List1" />
+    from file
+    where parent_folder_id = #{parentFolderId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteFolderById" parameterType="java.lang.Integer">
+
+    delete from folder
+    where folder_id = #{folderId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteFolderByParentFolderId" parameterType="java.lang.Integer">
+
+    delete from folder
+    where parent_folder_id = #{parentFolderId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteFolderByFileStoreId" parameterType="java.lang.Integer">
+
+    delete from folder
+    where file_store_id = #{fileStoreId,jdbcType=INTEGER}
+  </delete>
+  <insert id="addFolder" keyColumn="folder_id" keyProperty="folderId" parameterType="com.netdisk.entity.Folder" useGeneratedKeys="true">
+
+    insert into folder
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        <include refid="Base_Insert_Key_List"></include>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <include refid="Base_Insert_Value_List"></include>
+    </trim>
+  </insert>
+  <update id="updateFolderById" parameterType="com.netdisk.entity.Folder">
+
+    update folder
+    <set>
+        <include refid="Base_Update_List"></include>
+    </set>
+    where folder_id = #{folderId,jdbcType=INTEGER}
+  </update>
+  <select id="getFolderCountByFileStoreId" resultType="java.lang.Integer">
+        select count(*) from folder where file_store_id = #{id}
+    </select>
+
+</mapper>
